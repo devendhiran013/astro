@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import SideBar from "./Components/Screens/SideBar";
 import ProductManagementPage from "./Components/Screens/ProductMangement"; // Corrected import name
-import UserManagementPage from "./Components/Screens/UserManagement"; 
+import UserManagementPage from "./Components/Screens/UserManagement";
 import OrderManagementPage from './Components/Screens/OrderangementPage';
-import  Dashboard from './Components/Screens/Dashboard';
+import Dashboard from './Components/Screens/Dashboard';
 import RequisitionPage from './Components/Screens/RequistionPage'; // Assuming you have a Dashboard component
 import "./App.css";
 
@@ -25,7 +25,7 @@ function App() {
         return <RequisitionPage />;
       // Add more cases for other pages as you create them
       default:
-        return <ProductManagementPage />; // Default to product management
+        return <Dashboard />; // Default to product management
     }
   };
 
