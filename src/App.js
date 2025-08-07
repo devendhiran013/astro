@@ -1,16 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SideBar from "./Components/Screens/SideBar";
-import ProductManagementPage from "./Components/Screens/ProductMangement"; // Corrected import name
+import ProductManagementPage from "./Components/Screens/ProductMangement";
 import UserManagementPage from "./Components/Screens/UserManagement";
 import OrderManagementPage from './Components/Screens/OrderangementPage';
 import Dashboard from './Components/Screens/Dashboard';
-import RequisitionPage from './Components/Screens/RequistionPage'; // Assuming you have a Dashboard component
+import RequisitionPage from './Components/Screens/RequistionPage';
 import "./App.css";
 
 function App() {
-  const [activePage, setActivePage] = useState('product-management'); // State to manage active page
+  // Load from localStorage or fallback to 'dashboard'
+  const [activePage, setActivePage] = useState(() => {
+    return localStorage.getItem('activePage') || 'dashboard';
+  });
 
-  // Function to render the content based on activePage state
+  // Store active page in localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('activePage', activePage);
+  }, [activePage]);
+
   const renderContent = () => {
     switch (activePage) {
       case 'product-management':
@@ -23,17 +30,15 @@ function App() {
         return <Dashboard />;
       case 'requisition':
         return <RequisitionPage />;
-      // Add more cases for other pages as you create them
       default:
-        return <Dashboard />; // Default to product management
+        return <Dashboard />;
     }
   };
 
   return (
     <div className="flex h-screen overflow-hidden">
-      {/* Pass setActivePage function to SideBar so it can update the parent's state */}
       <SideBar setActivePage={setActivePage} activePage={activePage} />
-      <div className="flex-1 overflow-y-auto"> {/* flex-1 makes it take remaining space, overflow-y-auto for scrolling */}
+      <div className="flex-1 overflow-y-auto">
         {renderContent()}
       </div>
     </div>
