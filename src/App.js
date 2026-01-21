@@ -1,75 +1,71 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from "react";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+
 import SideBar from "./Components/Screens/SideBar";
 import ProductManagementPage from "./Components/Screens/ProductMangement";
 import UserManagementPage from "./Components/Screens/UserManagement";
-import OrderManagementPage from './Components/Screens/OrderangementPage';
-import Dashboard from './Components/Screens/Dashboard';
-import RequisitionPage from './Components/Screens/RequistionPage';
+import OrderManagementPage from "./Components/Screens/OrderMangementPage";
+import Dashboard from "./Components/Screens/Dashboard";
+import RequisitionPage from "./Components/Screens/RequistionPage";
+
 import "./App.css";
 
 function App() {
-  const [activePage, setActivePage] = useState(() => {
-    return localStorage.getItem('activePage') || 'dashboard';
-  });
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const navigate = useNavigate();
 
-  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false); // Mobile toggle
+  // Mobile navigation handler
+  const handleMobileNavigate = (id, path) => {
+    setIsMobileSidebarOpen(false); // close first
 
-  useEffect(() => {
-    localStorage.setItem('activePage', activePage);
-  }, [activePage]);
-
-  const renderContent = () => {
-    switch (activePage) {
-      case 'product-management': return <ProductManagementPage />;
-      case 'user-management': return <UserManagementPage />;
-      case 'order-management': return <OrderManagementPage />;
-      case 'dashboard': return <Dashboard />;
-      case 'requisition': return <RequisitionPage />;
-      default: return <Dashboard />;
-    }
+    // wait for sidebar animation to finish, then navigate
+    setTimeout(() => {
+      navigate(path);
+    }, 150);
   };
 
   return (
-    <div className="flex h-screen overflow-hidden relative">
-      {/* Sidebar (hidden on small screens) */}
-      <div className="hidden md:block">
-        <SideBar setActivePage={setActivePage} activePage={activePage} />
+    <div className="flex h-screen overflow-hidden">
+
+      {/* Desktop Sidebar (Left side) */}
+      <div className="hidden md:block w-80">
+        <SideBar onNavigate={(id, path) => navigate(path)} />
       </div>
 
-      {/* Mobile Sidebar */}
+      {/* Mobile Sidebar (Right side) */}
       {isMobileSidebarOpen && (
         <>
-          {/* Overlay */}
+          {/* Background overlay */}
           <div
             className="fixed inset-0 bg-black bg-opacity-40 z-40"
             onClick={() => setIsMobileSidebarOpen(false)}
           />
 
-          {/* Sidebar: Slide in from RIGHT */}
-          <div className="fixed top-0 right-0 w-64 h-full bg-yellow-400 z-50">
-            <SideBar
-              setActivePage={(page) => {
-                setActivePage(page);
-                setIsMobileSidebarOpen(false);
-              }}
-              activePage={activePage}
-            />
+          {/* Slide-in Sidebar */}
+          <div className="fixed top-0 right-0 w-64 h-full bg-[#FFD641] z-50 shadow-xl">
+            <SideBar onNavigate={handleMobileNavigate} />
           </div>
         </>
       )}
 
+      {/* Mobile Menu Button */}
+      <button
+        className="md:hidden absolute top-4 right-4 z-50 text-3xl"
+        onClick={() => setIsMobileSidebarOpen(true)}
+      >
+        ☰
+      </button>
 
-      {/* Main content */}
-      <div className="flex-1 overflow-y-auto relative z-10">
-        {/* Mobile menu button */}
-        <button
-          className="md:hidden absolute top-4 right-4 z-50"
-          onClick={() => setIsMobileSidebarOpen(true)}
-        >
-          <svg className="w-6 h-6" fill="none" stroke="black" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
-        </button>
-
-        {renderContent()}
+      {/* Main Content */}
+      <div className="flex-1 overflow-y-auto relative">
+        <Routes>
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/product-management" element={<ProductManagementPage />} />
+          <Route path="/user-management" element={<UserManagementPage />} />
+          <Route path="/order-management" element={<OrderManagementPage />} />
+          <Route path="/requisition" element={<RequisitionPage />} />
+        </Routes>
       </div>
     </div>
   );

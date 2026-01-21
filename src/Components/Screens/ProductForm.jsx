@@ -1,122 +1,151 @@
-import React, { useState, useEffect } from "react";
-import { X } from 'lucide-react'; // Import the X icon
+import { X } from "lucide-react";
+import { useState, useEffect } from "react";
 
 const ProductForm = ({ product, onSave, onDelete, onClose }) => {
-  const [productName, setProductName] = useState("");
-  const [price, setPrice] = useState("");
-  const [discount, setDiscount] = useState("");
-  const [description, setDescription] = useState("");
+  const [formData, setFormData] = useState({
+    title: "",
+    actualPrice: "",
+    discountedPrice: "",
+    discount: "",
+    description: "",
+    isEnabled: true,
+  });
 
-  // Populate form fields when product prop changes
   useEffect(() => {
     if (product) {
-      setProductName(product.name || "");
-      setPrice(product.price || "");
-      setDiscount(product.discount || "");
-      setDescription(product.description || "");
+      setFormData({
+        title: product.title || "",
+        actualPrice: product.actualPrice || "",
+        discountedPrice: product.discountedPrice || "",
+        discount: product.discount || "",
+        description: product.description || "",
+        isEnabled: product.isEnabled ?? true,
+      });
     }
   }, [product]);
 
-  const handleSave = () => {
-    const updatedProduct = {
-      ...product, // Keep existing properties
-      name: productName,
-      price: parseFloat(price), // Convert to number
-      discount: parseFloat(discount), // Convert to number
-      description: description,
-    };
-    onSave(updatedProduct);
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
-  const handleDelete = () => {
-    if (window.confirm('Are you sure you want to delete this product?')) {
-      onDelete(product.id);
-    }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSave({ ...product, ...formData });
   };
 
   return (
-    // Modal Overlay:
-    // - fixed: Positions the element relative to the viewport.
-    // - inset-0: Shorthand for top:0, right:0, bottom:0, left:0, making it cover the entire screen.
-    // - bg-gray-600 bg-opacity-50: Creates the semi-transparent dark background.
-    // - flex items-center justify-center: Centers the child element (the modal card) both vertically and horizontally.
-    // - z-[100]: Ensures it's on top of almost all other content.
-    <div className="fixed top-0 left-0 w-full h-full bg-gray-600 bg-opacity-50 flex items-center justify-center z-[100] font-inter">
-      {/* Modal Card */}
-      <div className="w-[327px] h-auto bg-white rounded-[20px] p-[33px] shadow relative">
-        {/* Close Button */}
-        <button
-          onClick={onClose} // Call the onClose prop to close the modal
-          className="absolute top-5 left-5 text-gray-500 hover:text-gray-700 rounded-full p-1 transition duration-150"
-        >
-          <X size={24} />
-        </button>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg shadow-lg max-w-md w-full p-6">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-semibold">Edit Product</h3>
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+            <X size={20} />
+          </button>
+        </div>
 
-        {/* Delete Button */}
-        <button
-          onClick={handleDelete}
-          className="absolute top-5 right-5 bg-red-100 text-red-700 text-sm px-3 py-1.5 rounded-full flex items-center gap-1 hover:bg-red-200 transition duration-150"
-        >
-          <span className="w-2 h-2 bg-red-500 rounded-full"></span>
-          Delete
-        </button>
-
-        {/* Form Fields */}
-        <div className="space-y-6 mt-2">
+        <form onSubmit={handleSubmit} className="space-y-4">
           {/* Product Name */}
-          <div className="flex items-center justify-between pt-4">
-            <label className="text-[13px] text-gray-700 w-[100px] ">Product Name</label>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Product Name</label>
             <input
               type="text"
-              value={productName}
-              onChange={(e) => setProductName(e.target.value)}
-              className="w-[138px] flex-1 border-b border-gray-300 outline-none bg-transparent focus:border-orange-500"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+              required
             />
           </div>
 
-          {/* Price */}
-          <div className="flex items-center justify-between pt-4">
-            <label className="text-sm text-gray-700 w-[100px]">Price</label>
+          {/* Actual Price */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Actual Price</label>
             <input
-              type="text"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              className="w-[138px] flex-1 border-b border-gray-300 outline-none bg-transparent focus:border-orange-500"
+              type="number"
+              name="actualPrice"
+              value={formData.actualPrice}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+              required
             />
           </div>
 
-          {/* Discount */}
-          <div className="flex items-center justify-between pt-4">
-            <label className="text-sm text-gray-700 w-[100px]">Discount</label>
+          {/* Discounted Price */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Discounted Price</label>
             <input
-              type="text"
-              value={discount}
-              onChange={(e) => setDiscount(e.target.value)}
-              className="w-[138px] flex-1 border-b border-gray-300 outline-none bg-transparent focus:border-orange-500"
+              type="number"
+              name="discountedPrice"
+              value={formData.discountedPrice}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+            />
+          </div>
+
+          {/* Discount % */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Discount (%)</label>
+            <input
+              type="number"
+              name="discount"
+              value={formData.discount}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg"
             />
           </div>
 
           {/* Description */}
-          <div className="flex items-center justify-between pt-4">
-            <label className="text-sm text-gray-700 w-[100px]">Description</label>
-            <input
-              type="text"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="w-[138px] flex-1 border-b border-gray-300 outline-none bg-transparent focus:border-orange-500"
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Description</label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              rows="3"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg"
             />
           </div>
-        </div>
 
-        {/* Save Button */}
-        <div className="mt-8">
-          <button
-            onClick={handleSave}
-            className="w-full py-2 rounded-lg bg-green-100 text-green-700 text-sm font-semibold hover:bg-green-200 transition duration-150 shadow-md"
-          >
-            Save
-          </button>
-        </div>
+          {/* Status */}
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              name="isEnabled"
+              checked={formData.isEnabled}
+              onChange={handleChange}
+              className="w-4 h-4"
+            />
+            <label className="ml-2 text-sm text-gray-700">Active</label>
+          </div>
+
+          {/* Buttons */}
+          <div className="flex gap-3 mt-6">
+            <button
+              type="submit"
+              className="flex-1 bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600"
+            >
+              Save
+            </button>
+            <button
+              type="button"
+              onClick={() => onDelete(product._id)}
+              className="flex-1 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600"
+            >
+              Delete
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-400"
+            >
+              Close
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

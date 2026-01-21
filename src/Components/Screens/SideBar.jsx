@@ -1,61 +1,32 @@
-"use client";
-
+import { useLocation } from "react-router-dom";
 import { cn } from "../lib/utils";
 
 const menuItems = [
-  {
-    id: "dashboard",
-    label: "Dashboard",
-    icon: "https://img.icons8.com/material-sharp/24/dashboard-layout.png",
-  },
-  {
-    id: "user-management",
-    label: "User Management",
-    icon: "https://c.animaapp.com/md08cjntWaCLqK/img/category.png",
-  },
-  {
-    id: "product-management",
-    label: "Product Management",
-    icon: "https://img.icons8.com/external-tanah-basah-glyph-tanah-basah/48/external-cube-user-interface-tanah-basah-glyph-tanah-basah.png",
-  },
-  {
-    id: "order-management",
-    label: "Order Management",
-    icon: "https://c.animaapp.com/md08cjntWaCLqK/img/category-1.png",
-  },
-  {
-    id: "requisition",
-    label: "Requisition",
-    icon: "https://c.animaapp.com/md08cjntWaCLqK/img/article.png",
-  },
+  { id: "dashboard", label: "Dashboard", path: "/dashboard", icon: "https://img.icons8.com/material-sharp/24/dashboard-layout.png" },
+  { id: "user-management", label: "User Management", path: "/user-management", icon: "https://c.animaapp.com/md08cjntWaCLqK/img/category.png" },
+  { id: "product-management", label: "Product Management", path: "/product-management", icon: "https://img.icons8.com/external-tanah-basah-glyph-tanah-basah/48/external-cube-user-interface-tanah-basah-glyph-tanah-basah.png" },
+  { id: "order-management", label: "Order Management", path: "/order-management", icon: "https://c.animaapp.com/md08cjntWaCLqK/img/category-1.png" },
+  { id: "requisition", label: "Requisition", path: "/requisition", icon: "https://c.animaapp.com/md08cjntWaCLqK/img/article.png" },
 ];
 
 const bottomMenuItems = [
-  {
-    id: "settings",
-    label: "Settings",
-    icon: "https://c.animaapp.com/md08cjntWaCLqK/img/category-3.png",
-    isSignOut: false,
-  },
-  {
-    id: "sign-out",
-    label: "Sign out",
-    icon: "https://c.animaapp.com/md08cjntWaCLqK/img/category-2.png",
-    isSignOut: true,
-  },
+  { id: "settings", label: "Settings", path: "/settings", icon: "https://c.animaapp.com/md08cjntWaCLqK/img/category-3.png" },
+  { id: "sign-out", label: "Sign out", path: "/logout", icon: "https://c.animaapp.com/md08cjntWaCLqK/img/category-2.png", isSignOut: true },
 ];
 
-export default function Sidebar({ activePage, setActivePage }) {
-  const handleItemClick = (itemId) => {
-    setActivePage(itemId);
+export default function SideBar({ onNavigate }) {
+  const location = useLocation();
+
+  const handleClick = (item) => {
+    onNavigate?.(item.id, item.path);
   };
 
   return (
     <div className="flex flex-col h-full w-80 bg-[#FFD641] text-gray-800 shadow-xl font-['Roboto']">
-      {/* Header */}
+
+      {/* HEADER */}
       <div className="p-6 border-b border-yellow-600/20">
         <div className="flex items-center gap-3">
-          {/* Custom Logo */}
           <div className="relative w-[38.24px] h-[40.09px]">
             <div className="relative w-[39px] h-[41px] -top-px -left-px rounded-[19.74px/20.66px] border-[1.23px] border-solid border-[#471d00]">
               <div className="absolute w-[29px] h-[33px] top-[7px] left-0.5">
@@ -68,6 +39,7 @@ export default function Sidebar({ activePage, setActivePage }) {
             </div>
           </div>
 
+
           <div>
             <h1 className="text-lg font-semibold">நல்ல நேரம்</h1>
             <p className="text-sm opacity-80">ஆஸ்டேரா</p>
@@ -75,26 +47,22 @@ export default function Sidebar({ activePage, setActivePage }) {
         </div>
       </div>
 
-      {/* Main Menu */}
+      {/* MAIN MENU */}
       <div className="flex-1 px-4 py-6">
         <nav className="space-y-2">
           {menuItems.map((item) => {
-            const isActive = activePage === item.id;
+            const isActive = location.pathname === item.path;
             return (
               <button
                 key={item.id}
-                onClick={() => handleItemClick(item.id)}
+                onClick={() => handleClick(item)}
                 className={cn(
-                  "w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200",
+                  "w-full flex items-center gap-3 px-4 py-3 rounded-lg transition",
                   "hover:bg-[#F2F8FC]/50",
                   isActive && "bg-[#F2F8FC]/50 shadow-sm"
                 )}
               >
-                <img
-                  src={item.icon}
-                  alt={item.label}
-                  className="w-5 h-5 object-contain"
-                />
+                <img src={item.icon} className="w-5 h-5" />
                 <span className="font-medium">{item.label}</span>
               </button>
             );
@@ -102,28 +70,24 @@ export default function Sidebar({ activePage, setActivePage }) {
         </nav>
       </div>
 
-      {/* Bottom Menu */}
+      {/* BOTTOM MENU */}
       <div className="px-4 pb-6">
         <nav className="space-y-2">
           {bottomMenuItems.map((item) => {
-            const isActive = activePage === item.id;
+            const isActive = location.pathname === item.path;
             return (
               <button
                 key={item.id}
-                onClick={() => handleItemClick(item.id)}
+                onClick={() => handleClick(item)}
                 className={cn(
-                  "w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200",
+                  "w-full flex items-center gap-3 px-4 py-3 rounded-lg transition",
                   "hover:bg-[#F2F8FC]/40",
                   isActive && "bg-[#F2F8FC]/50 shadow-sm",
-                  item.isSignOut && "text-red-700 hover:bg-[#F2F8FC]/50"
+                  item.isSignOut && "text-red-700"
                 )}
               >
-                <img
-                  src={item.icon}
-                  alt={item.label}
-                  className="w-5 h-5 object-contain"
-                />
-                <span className="font-medium">{item.label}</span>
+                <img src={item.icon} className="w-5 h-5" />
+                <span>{item.label}</span>
               </button>
             );
           })}
