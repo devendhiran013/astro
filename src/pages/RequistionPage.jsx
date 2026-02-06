@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 
 import adminApi from "../services/adminApi";
-import Form from "./Form";
+import Form from "./modals/RequisitionDetailsModal";
 
 export default function RequisitionPage() {
     const [searchTerm, setSearchTerm] = useState("");
@@ -77,7 +77,7 @@ export default function RequisitionPage() {
         setSelectedService(null);
     };
 
-    
+
     return (
         <div className="flex-1 bg-gray-50 p-6 relative">
 

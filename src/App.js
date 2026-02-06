@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 
-import SideBar from "./Components/Screens/SideBar";
-import ProductManagementPage from "./Components/Screens/ProductMangement";
-import UserManagementPage from "./Components/Screens/UserManagement";
-import OrderManagementPage from "./Components/Screens/OrderMangementPage";
-import Dashboard from "./Components/Screens/Dashboard";
-import RequisitionPage from "./Components/Screens/RequistionPage";
-import AdminLogin from "./Components/Screens/Login";
-import AdminRegister from "./Components/Screens/Register";
+import SideBar from "./pages/SideBar";
+import ProductManagementPage from "./pages/ProductManagement";
+import UserManagementPage from "./pages/UserManagement";
+import OrderManagementPage from "./pages/OrderManagementPage";
+import Dashboard from "./pages/Dashboard";
+import RequisitionPage from "./pages/RequistionPage";
+import AdminLogin from "./pages/Login";
+import AdminRegister from "./pages/Register";
 
 export default function App() {
   const navigate = useNavigate();

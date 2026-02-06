@@ -30,6 +30,7 @@ export default function Dashboard() {
     repeatedUsers: 0
   });
 
+
   useEffect(() => {
     const load = async () => {
       try {
@@ -78,6 +79,12 @@ export default function Dashboard() {
       console.log(err);
     }
   };
+
+  const topProduct = productSales.length > 0
+    ? productSales.reduce((max, p) =>
+      p.totalSold > max.totalSold ? p : max
+    )
+    : null;
 
   const donutColors = ["#2563eb", "#9333ea", "#ec4899", "#06b6d4", "#10b981", "#8b5cf6"];
 
@@ -228,6 +235,8 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
 
         {/* PRODUCT SALES REPORT */}
+
+        {/* PRODUCT SALES REPORT */}
         <div className="bg-white p-6 rounded-2xl shadow-sm">
           <div className="flex justify-between mb-4">
             <div>
@@ -235,23 +244,80 @@ export default function Dashboard() {
               <h2 className="text-xl font-bold">
                 ₹{stats.totalSales.toLocaleString()}
               </h2>
+
+              {/* SHOW TOP PRODUCT ONLY IF AVAILABLE */}
+              {productSales.length > 0 ? (
+                <p className="text-sm text-gray-600 mt-1">
+                  🔥 Top Product:{" "}
+                  <span className="font-semibold">{topProduct.name}</span>
+                  <br />
+                  Sold: <span className="font-semibold">{topProduct.totalSold}</span>
+                </p>
+              ) : (
+                <p className="text-sm text-gray-400 mt-1">No product data</p>
+              )}
             </div>
+
             <Info className="text-gray-300" />
           </div>
 
-          <div className="flex items-center gap-6">
-            <div className="w-28 h-28 rounded-full border-[12px] border-blue-500 border-t-purple-500 border-r-pink-500"></div>
-
-            <div className="space-y-1 text-xs font-bold text-gray-500">
-              {productSales.slice(0, 5).map((p, i) => (
-                <div key={i} className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-sm" style={{ backgroundColor: donutColors[i] }}></div>
-                  <span>{p.name}</span>
-                </div>
-              ))}
+          {/* IF NO DATA → SHOW EMPTY STATE */}
+          {productSales.length === 0 ? (
+            <div className="flex items-center justify-center py-6 text-gray-400 text-sm">
+              No product sales available
             </div>
-          </div>
+          ) : (
+            <div className="flex items-center gap-6">
+
+              {/* DONUT CHART */}
+              <div className="relative w-28 h-28">
+                <svg className="w-full h-full transform -rotate-90">
+                  <circle
+                    cx="60"
+                    cy="60"
+                    r="50"
+                    stroke="#e5e7eb"
+                    strokeWidth="12"
+                    fill="transparent"
+                  />
+
+                  <circle
+                    cx="60"
+                    cy="60"
+                    r="50"
+                    stroke="#2563eb"
+                    strokeWidth="12"
+                    strokeDasharray={314}
+                    strokeDashoffset={
+                      314 - (314 * topProduct.totalSold) / topProduct.totalSold
+                    }
+                    strokeLinecap="round"
+                    fill="transparent"
+                  />
+                </svg>
+
+                <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-gray-700">
+                  {topProduct.totalSold}
+                </span>
+              </div>
+
+              {/* TOP 5 PRODUCTS LIST */}
+              <div className="space-y-1 text-xs font-bold text-gray-500">
+                {productSales.slice(0, 5).map((p, i) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <div
+                      className="w-2 h-2 rounded-sm"
+                      style={{ backgroundColor: donutColors[i] }}
+                    ></div>
+                    <span>{p.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
+
+
 
         {/* USER CIRCLES */}
         {[

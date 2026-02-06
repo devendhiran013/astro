@@ -8,7 +8,7 @@ import {
   Bell,
   Download,
 } from "lucide-react";
-import EditUserForm from "./EditUser";
+import EditUserForm from "./modals/EditUserModal";
 import adminApi from "../services/adminApi";
 
 const ITEMS_PER_PAGE = 5;
@@ -276,14 +276,14 @@ export default function UserManagementPage() {
       {/* ---------------------- EDIT POPUP ---------------------- */}
       {/* {selectedUser && (
         <> */}
-          {/* Dark Overlay */}
-          {/* <div
+      {/* Dark Overlay */}
+      {/* <div
             className="fixed inset-0 bg-black/40 z-40"
             onClick={() => setSelectedUser(null)}
           /> */}
 
-          {/* CENTERED POPUP FOR ALL SCREENS */}
-          {/* <div
+      {/* CENTERED POPUP FOR ALL SCREENS */}
+      {/* <div
             className="
         fixed z-50
         left-1/2 top-1/2
@@ -300,7 +300,7 @@ export default function UserManagementPage() {
               onClose={() => setSelectedUser(null)}
             />
           </div> */}
-        {/* </>
+      {/* </>
       )} */}
 
 

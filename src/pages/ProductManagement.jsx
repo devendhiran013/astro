@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 
 import adminApi from "../services/adminApi";
-import ProductForm from "./ProductForm";
+import ProductForm from "./modals/EditProductModal";
 import NewsManagementPage from "./NewsManagementPage";
 
 

@@ -9,8 +9,8 @@ import {
     ChevronRight,
 } from "lucide-react";
 import adminApi from "../services/adminApi";
-import NewsEditModal from "./NewsEditModal";
-import AddNewsModal from "./AddNewsModal";
+import NewsEditModal from "./modals/NewsEditModal";
+import AddNewsModal from "./modals/AddNewsModal";
 const ITEMS_PER_PAGE = 5;
 const DESCRIPTION_LIMIT = 60;
 

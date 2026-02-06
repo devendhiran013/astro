@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import { cn } from "../lib/utils";
+import { cn } from "../utils/utils";
 
 const menuItems = [
   { id: "dashboard", label: "Dashboard", path: "/dashboard", icon: "https://img.icons8.com/material-sharp/24/dashboard-layout.png" },
