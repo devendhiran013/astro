@@ -15,6 +15,7 @@ import {
 import adminApi from "../services/adminApi";
 import ProductForm from "./modals/EditProductModal";
 import NewsManagementPage from "./NewsManagementPage";
+import PageLoader from "../components/PageLoader";
 
 
 
@@ -112,7 +113,7 @@ const ProductManagementPage = () => {
     setEditingProductItem(null);
   };
 
-  if (loading) return <div className="p-6">Loading products…</div>;
+  if (loading) return <PageLoader message="Loading Products..." />;
 
   /* ======================= RENDER ======================= */
   return (

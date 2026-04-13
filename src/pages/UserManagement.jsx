@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import EditUserForm from "./modals/EditUserModal";
 import adminApi from "../services/adminApi";
+import PageLoader from "../components/PageLoader";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -97,7 +98,7 @@ export default function UserManagementPage() {
     a.click();
   };
 
-  if (loading) return <div className="p-6">Loading users…</div>;
+  if (loading) return <PageLoader message="Loading Users..." />;
 
   return (
     <div className="flex-1 bg-[#EEF5F9] p-4 md:p-6 relative">

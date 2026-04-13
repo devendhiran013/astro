@@ -6,6 +6,7 @@ import {
   AreaChart, Area, XAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend
 } from "recharts";
 import adminApi from "../services/adminApi";
+import PageLoader from "../components/PageLoader";
 
 export default function Dashboard() {
   const [selectedPeriod, setSelectedPeriod] = useState("12 Months");
@@ -23,6 +24,7 @@ export default function Dashboard() {
     totalCustomers: 0
   });
 
+  const [loading, setLoading] = useState(true);
   const [salesReport, setSalesReport] = useState([]);
   const [productSales, setProductSales] = useState([]);
   const [userStats, setUserStats] = useState({
@@ -49,6 +51,8 @@ export default function Dashboard() {
         setUserStats(user.data.data);
       } catch (err) {
         console.error("Dashboard Load Failed", err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -83,6 +87,8 @@ export default function Dashboard() {
   const top3Products = [...productSales].sort((a, b) => b.totalSold - a.totalSold).slice(0, 3);
 
   const donutColors = ["#2563eb", "#9333ea", "#ec4899", "#06b6d4", "#10b981", "#8b5cf6"];
+
+  if (loading) return <PageLoader message="Loading Dashboard..." />;
 
   return (
     <div className="min-h-screen bg-[#F8F9FB] p-4 md:p-8 font-sans">

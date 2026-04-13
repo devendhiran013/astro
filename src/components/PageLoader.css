@@ -1,0 +1,218 @@
+/* =============================================
+   PAGE LOADER — Full-screen animated overlay
+   ============================================= */
+
+.pl-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  animation: pl-fadein 0.25s ease;
+}
+
+@keyframes pl-fadein {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---- Outer box ---- */
+.pl-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+/* =====================
+   ORBIT ILLUSTRATION
+   ===================== */
+.pl-orbit-wrapper {
+  position: relative;
+  width: 180px;
+  height: 180px;
+}
+
+/* Orbit rings */
+.pl-orbit-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px dashed rgba(167, 139, 250, 0.35);
+  animation: pl-spin 6s linear infinite;
+}
+
+.pl-ring2 {
+  inset: 20px;
+  border-color: rgba(196, 181, 253, 0.25);
+  animation-direction: reverse;
+  animation-duration: 4s;
+}
+
+@keyframes pl-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Center icon */
+.pl-center-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 56px;
+  height: 56px;
+  animation: pl-pulse 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 12px rgba(167, 139, 250, 0.7));
+}
+
+@keyframes pl-pulse {
+
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  50% {
+    transform: translate(-50%, -50%) scale(1.12);
+  }
+}
+
+/* ---- Orbiting dots ---- */
+.pl-dot {
+  position: absolute;
+  width: 38px;
+  height: 38px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pl-orbit 6s linear infinite;
+  transform-origin: 90px 90px;
+  /* radius = half of wrapper */
+}
+
+.pl-dot-icon {
+  font-size: 17px;
+  line-height: 1;
+}
+
+/* Position each dot at a different start angle */
+.pl-dot1 {
+  transform: rotate(0deg) translateX(75px) rotate(0deg);
+  animation-delay: 0s;
+}
+
+.pl-dot2 {
+  transform: rotate(90deg) translateX(75px) rotate(-90deg);
+  animation-delay: -1.5s;
+}
+
+.pl-dot3 {
+  transform: rotate(180deg) translateX(75px) rotate(-180deg);
+  animation-delay: -3s;
+}
+
+.pl-dot4 {
+  transform: rotate(270deg) translateX(75px) rotate(-270deg);
+  animation-delay: -4.5s;
+}
+
+@keyframes pl-orbit {
+  from {
+    transform: rotate(var(--start, 0deg)) translateX(75px) rotate(calc(-1 * var(--start, 0deg)));
+  }
+
+  to {
+    transform: rotate(calc(var(--start, 0deg) + 360deg)) translateX(75px) rotate(calc(-1 * (var(--start, 0deg) + 360deg)));
+  }
+}
+
+/* Give each dot its --start so counter-rotation works correctly */
+.pl-dot1 {
+  --start: 0deg;
+}
+
+.pl-dot2 {
+  --start: 90deg;
+}
+
+.pl-dot3 {
+  --start: 180deg;
+}
+
+.pl-dot4 {
+  --start: 270deg;
+}
+
+/* =====================
+   BAR LOADER
+   ===================== */
+.pl-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 36px;
+}
+
+.pl-bar {
+  width: 6px;
+  border-radius: 4px;
+  background: linear-gradient(to top, #7c3aed, #c4b5fd);
+  animation: pl-bounce 0.8s ease-in-out infinite alternate;
+}
+
+.pl-bar:nth-child(1) {
+  height: 16px;
+}
+
+.pl-bar:nth-child(2) {
+  height: 28px;
+}
+
+.pl-bar:nth-child(3) {
+  height: 36px;
+}
+
+.pl-bar:nth-child(4) {
+  height: 28px;
+}
+
+.pl-bar:nth-child(5) {
+  height: 16px;
+}
+
+@keyframes pl-bounce {
+  from {
+    transform: scaleY(0.5);
+    opacity: 0.5;
+  }
+
+  to {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+/* =====================
+   MESSAGE TEXT
+   ===================== */
+.pl-message {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b7280;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}

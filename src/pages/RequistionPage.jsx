@@ -12,11 +12,13 @@ import {
 
 import adminApi from "../services/adminApi";
 import Form from "./modals/RequisitionDetailsModal";
+import PageLoader from "../components/PageLoader";
 
 export default function RequisitionPage() {
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedItems, setSelectedItems] = useState([]);
     const [isFormOpen, setIsFormOpen] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [services, setServices] = useState([]);
     const [selectedService, setSelectedService] = useState(null);
 
@@ -31,6 +33,8 @@ export default function RequisitionPage() {
 
             } catch (err) {
                 console.error("Fetch error:", err);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -77,6 +81,8 @@ export default function RequisitionPage() {
         setSelectedService(null);
     };
 
+
+    if (loading) return <PageLoader message="Loading Requisitions..." />;
 
     return (
         <div className="flex-1 bg-gray-50 p-6 relative">

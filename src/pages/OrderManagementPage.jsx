@@ -12,12 +12,14 @@ import {
 } from "lucide-react";
 
 import adminApi from "../services/adminApi";
+import PageLoader from "../components/PageLoader";
 
 const ITEMS_PER_PAGE = 5;
 
 export default function OrderManagementPage() {
     const [payments, setPayments] = useState([]);
     const [filtered, setFiltered] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
     const [sortType, setSortType] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
@@ -54,6 +56,8 @@ export default function OrderManagementPage() {
                 setFiltered(formatted);
             } catch (err) {
                 console.error("Fetch error:", err);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -109,6 +113,8 @@ export default function OrderManagementPage() {
     //     a.download = "orders.csv";
     //     a.click();
     // };
+
+    if (loading) return <PageLoader message="Loading Orders..." />;
 
     return (
         <div className="flex-1 bg-[#EEF5F9] p-4 md:p-6">
