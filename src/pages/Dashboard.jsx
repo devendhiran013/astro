@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Search, Mail, Bell, Download, Info } from "lucide-react";
 import {
-  AreaChart, Area, XAxis, Tooltip, ResponsiveContainer
+  AreaChart, Area, XAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend
 } from "recharts";
 import adminApi from "../services/adminApi";
 
@@ -80,11 +80,7 @@ export default function Dashboard() {
     }
   };
 
-  const topProduct = productSales.length > 0
-    ? productSales.reduce((max, p) =>
-      p.totalSold > max.totalSold ? p : max
-    )
-    : null;
+  const top3Products = [...productSales].sort((a, b) => b.totalSold - a.totalSold).slice(0, 3);
 
   const donutColors = ["#2563eb", "#9333ea", "#ec4899", "#06b6d4", "#10b981", "#8b5cf6"];
 
@@ -237,27 +233,14 @@ export default function Dashboard() {
         {/* PRODUCT SALES REPORT */}
 
         {/* PRODUCT SALES REPORT */}
-        <div className="bg-white p-6 rounded-2xl shadow-sm">
+        <div className="bg-white p-6 rounded-2xl shadow-sm flex flex-col justify-between">
           <div className="flex justify-between mb-4">
             <div>
               <p className="text-xs text-gray-400 mb-1">Product Sales</p>
               <h2 className="text-xl font-bold">
                 ₹{stats.totalSales.toLocaleString()}
               </h2>
-
-              {/* SHOW TOP PRODUCT ONLY IF AVAILABLE */}
-              {productSales.length > 0 ? (
-                <p className="text-sm text-gray-600 mt-1">
-                  🔥 Top Product:{" "}
-                  <span className="font-semibold">{topProduct.name}</span>
-                  <br />
-                  Sold: <span className="font-semibold">{topProduct.totalSold}</span>
-                </p>
-              ) : (
-                <p className="text-sm text-gray-400 mt-1">No product data</p>
-              )}
             </div>
-
             <Info className="text-gray-300" />
           </div>
 
@@ -267,52 +250,27 @@ export default function Dashboard() {
               No product sales available
             </div>
           ) : (
-            <div className="flex items-center gap-6">
-
-              {/* DONUT CHART */}
-              <div className="relative w-28 h-28">
-                <svg className="w-full h-full transform -rotate-90">
-                  <circle
-                    cx="60"
-                    cy="60"
-                    r="50"
-                    stroke="#e5e7eb"
-                    strokeWidth="12"
-                    fill="transparent"
-                  />
-
-                  <circle
-                    cx="60"
-                    cy="60"
-                    r="50"
-                    stroke="#2563eb"
-                    strokeWidth="12"
-                    strokeDasharray={314}
-                    strokeDashoffset={
-                      314 - (314 * topProduct.totalSold) / topProduct.totalSold
-                    }
-                    strokeLinecap="round"
-                    fill="transparent"
-                  />
-                </svg>
-
-                <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-gray-700">
-                  {topProduct.totalSold}
-                </span>
-              </div>
-
-              {/* TOP 5 PRODUCTS LIST */}
-              <div className="space-y-1 text-xs font-bold text-gray-500">
-                {productSales.slice(0, 5).map((p, i) => (
-                  <div key={i} className="flex items-center gap-2">
-                    <div
-                      className="w-2 h-2 rounded-sm"
-                      style={{ backgroundColor: donutColors[i] }}
-                    ></div>
-                    <span>{p.name}</span>
-                  </div>
-                ))}
-              </div>
+            <div className="h-44 mt-2">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={top3Products}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={40}
+                    outerRadius={60}
+                    paddingAngle={3}
+                    dataKey="totalSold"
+                    nameKey="name"
+                  >
+                    {top3Products.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={donutColors[index % donutColors.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip formatter={(value, name) => [value, name]} />
+                  <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{ fontSize: '11px', fontWeight: 'bold', color: '#6b7280' }} />
+                </PieChart>
+              </ResponsiveContainer>
             </div>
           )}
         </div>
